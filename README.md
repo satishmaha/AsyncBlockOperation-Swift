@@ -28,9 +28,9 @@ As `NSBlockOperation` does, `AsyncBlockOperation` supports `NSOperationQueue` ex
 **Swift**
 
 ```swift
-queue.addOperationWithAsyncBlock { op in
+queue.addOperationWithAsyncBlock (AsyncBlockOperation{ op in
     op.complete()
-}
+})
 ```
 
 License
