@@ -9,19 +9,19 @@
 
 import Foundation
 
-class AsyncBlockOperation: NSOperation {
+class AsyncBlockOperation: Operation {
     
     typealias AsyncBlock = (AsyncBlockOperation) -> Void
     
     var block: AsyncBlock?
-
-    init(block: AsyncBlock) {
+    
+    init(block: @escaping AsyncBlock) {
         super.init()
         self.block = block
     }
     
     override func start() {
-        executing = true
+        isExecuting = true
         if let executingBlock = self.block {
             executingBlock(self)
         } else {
@@ -30,40 +30,40 @@ class AsyncBlockOperation: NSOperation {
     }
     
     func complete() {
-        executing = false
-        finished = true
+        isExecuting = false
+        isFinished = true
     }
     
     private var _executing: Bool = false
-    override var executing: Bool {
+    override var isExecuting: Bool {
         get {
             return _executing
         }
         set {
             if _executing != newValue {
-                willChangeValueForKey("isExecuting")
+                willChangeValue(forKey: "isExecuting")
                 _executing = newValue
-                didChangeValueForKey("isExecuting")
+                didChangeValue(forKey: "isExecuting")
             }
         }
     }
     
     private var _finished: Bool = false;
-    override var finished: Bool {
+    override var isFinished: Bool {
         get {
             return _finished
         }
         set {
             if _finished != newValue {
-                willChangeValueForKey("isFinished")
+                willChangeValue(forKey: "isFinished")
                 _finished = newValue
-                didChangeValueForKey("isFinished")
+                didChangeValue(forKey: "isFinished")
             }
         }
     }
 }
 
-extension NSOperationQueue {
+extension OperationQueue {
     
     func addOperationWithAsyncBlock(block: AsyncBlockOperation) {
         self.addOperation(block)
